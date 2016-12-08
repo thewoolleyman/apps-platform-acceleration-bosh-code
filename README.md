@@ -12,4 +12,4 @@ v2 - Articulate deployment with cloud configuration extracted
 
 This branch includes the solution to the final lab. Look at the changes to [articulate.yml](./articulate.yml) and
 [cloud_config.yml](./cloud-config.yml). To see the changes more clearly, take a look at the 
-[diff](compare/v2...final_lab_solution).
+[diff](https://github.com/pivotal-education/platform-acceleration-bosh-code/compare/v2...74aacb4).
