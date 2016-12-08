@@ -6,6 +6,8 @@ director_uuid: <%= `bosh status --uuid` %>
 releases:
   - name: articulate
     version: latest
+  - name: redis
+    version: latest
 
 instance_groups:
   - name: articulate
@@ -19,6 +21,68 @@ instance_groups:
         name: articulate
         properties:
           port: 9000
+
+  - name: redis_leader_z1
+    instances: 1
+    resource_pool: redis
+    persistent_disk: 4096
+    networks:
+      - name: redis
+        static_ips:
+        - 10.244.2.2
+    jobs:
+      - release: redis
+        name: redis
+        properties:
+          redis:
+            password: red!s
+
+  - name: redis_z1
+    instances: 2
+    resource_pool: redis
+    persistent_disk: 4096
+    networks:
+      - name: redis
+    update:
+      canaries: 10
+    jobs:
+      - release: redis
+        name: redis
+        properties:
+          redis:
+            master: 10.244.2.2
+            password: red!s
+
+  - name: redis_test_slave_z1
+    instances: 1
+    resource_pool: redis
+    persistent_disk: 4096
+    networks:
+      - name: redis
+        static_ips:
+        - 10.244.2.6
+    jobs:
+      - release: redis
+        name: redis
+        properties:
+          redis:
+            master: 10.244.2.2
+            password: red!s
+
+  - name: acceptance-tests
+    instances: 1
+    lifecycle: errand
+    resource_pool: redis
+    networks:
+      - name: redis
+    jobs:
+      - release: redis
+        name: acceptance-tests
+        properties:
+          redis:
+            master: 10.244.2.2
+            password: red!s
+            slave: 10.244.2.6
 
 update:
   canaries: 1

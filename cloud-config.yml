@@ -7,6 +7,15 @@ networks:
     - range: 10.244.9.0/24
       gateway: 10.244.9.1
       static: [10.244.9.2 - 10.244.9.10]
+  - name: redis
+    type: manual
+    subnets:
+    - range: 10.244.1.0/24
+      gateway: 10.244.1.1
+      static: []
+    - range: 10.244.2.0/24
+      gateway: 10.244.2.1
+      static: [10.244.2.2, 10.244.2.6]
 
 compilation:
   cloud_properties:
@@ -20,6 +29,13 @@ resource_pools:
   cloud_properties:
     name: random
   network: articulate
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+- name: redis
+  cloud_properties:
+    name: random
+  network: redis
   stemcell:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
     version: latest
