@@ -1,0 +1,6 @@
+check process articulate
+    with pidfile /var/vcap/sys/run/articulate/articulate.pid
+    start program "/var/vcap/jobs/articulate/bin/ctl start"
+    stop program "/var/vcap/jobs/articulate/bin/ctl stop"
+    group vcap
+    if failed host localhost port <%= p("port") %> protocol HTTP then restart

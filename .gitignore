@@ -1,0 +1,10 @@
+.idea
+*.iml
+private.yml
+dev.yml
+.blobs
+.dev_builds
+blobs
+dev_releases
+.vagrant
+tmp

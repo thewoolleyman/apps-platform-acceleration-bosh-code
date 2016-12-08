@@ -1,0 +1,3 @@
+[submodule "articulate-release/src/articulate"]
+	path = articulate-release/src/articulate
+	url = https://github.com/pivotal-enablement/articulate.git

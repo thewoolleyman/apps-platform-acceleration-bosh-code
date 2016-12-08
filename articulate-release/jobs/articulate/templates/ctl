@@ -1,0 +1,50 @@
+#!/bin/bash
+
+RUN_DIR=/var/vcap/sys/run/articulate
+LOG_DIR=/var/vcap/sys/log/articulate
+
+PIDFILE=$RUN_DIR/articulate.pid
+RUNAS=vcap
+
+export PATH=/var/vcap/packages/java/bin:$PATH
+
+function pid_exists() {
+  ps -p $1 &> /dev/null
+}
+
+case $1 in
+
+    start)
+      mkdir -p $RUN_DIR $LOG_DIR
+      chown -R $RUNAS:$RUNAS $RUN_DIR $LOG_DIR
+
+      PORT=<%= p("port") %>
+      if [ $PORT -eq 0 ]; then
+        echo "Must set a port higher than 0" >> $LOG_DIR/articulate.stderr.log
+        exit 1
+      fi
+
+      echo $$ > $PIDFILE
+
+      # chpst runs a program with a changed process state
+      # we use chpst to change the user and group that we run the command as
+      exec chpst -u $RUNAS:$RUNAS \
+          java -Dserver.port=$PORT \
+          -jar /var/vcap/packages/articulate_app/articulate.jar \
+          >>$LOG_DIR/articulate.stdout.log 2>>$LOG_DIR/articulate.stderr.log
+      ;;
+
+    stop)
+      PID=$(head -1 $PIDFILE)
+      #If $PID is not null, and ps -p $PID returns a non-zero exit code
+      if [ ! -z $PID ] && pid_exists $PID; then
+        kill $PID
+      fi
+      while [ -e /proc/$PID ]; do sleep 0.1; done
+      rm -r $PIDFILE
+      ;;
+
+    *)
+      echo "Usage: ctl {start|stop}" ;;
+esac
+exit 0

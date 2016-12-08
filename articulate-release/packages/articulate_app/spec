@@ -1,0 +1,6 @@
+---
+name: articulate_app
+dependencies:
+- java
+files:
+- articulate/**/*

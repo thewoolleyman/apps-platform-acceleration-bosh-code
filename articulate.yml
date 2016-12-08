@@ -1,0 +1,48 @@
+---
+name: articulate
+
+director_uuid: <%= `bosh status --uuid` %>
+
+releases:
+  - name: articulate
+    version: latest
+
+instance_groups:
+  - name: articulate
+    instances: 1
+    resource_pool: articulate
+    networks:
+      - name: articulate
+        static_ips: [10.244.9.5]
+    jobs:
+      - release: articulate
+        name: articulate
+        properties: {}
+
+networks:
+  - name: articulate
+    type: manual
+    subnets:
+    - range: 10.244.9.0/24
+      gateway: 10.244.9.1
+      static: [10.244.9.2 - 10.244.9.10]
+
+resource_pools:
+  - name: articulate
+    network: articulate
+    cloud_properties: {}
+    stemcell:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+      version: latest
+
+compilation:
+  workers: 3
+  network: articulate
+  cloud_properties: {}
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000

@@ -1,0 +1,13 @@
+---
+name: articulate
+templates:
+  ctl: bin/ctl
+
+packages:
+- articulate_app
+- java
+
+properties:
+  port:
+    description: "Web HTTP port for articulate app"
+    default: 0
