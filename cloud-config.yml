@@ -1,0 +1,21 @@
+networks:
+  - name: articulate
+    type: manual
+    subnets:
+    - range: 10.244.9.0/24
+      gateway: 10.244.9.1
+      static: [10.244.9.2 - 10.244.9.10]
+
+compilation:
+  workers: 3
+  network: articulate
+  cloud_properties: {}
+
+resource_pools:
+  - name: articulate
+    network: articulate
+    cloud_properties: {}
+    stemcell:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+      version: latest
+
