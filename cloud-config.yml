@@ -1,4 +1,29 @@
+<<<<<<< Updated upstream
+=======
+---
+azs:
+- name: z1
+- name: z2
+- name: z3
+
+#vm_types:
+#- name: default
+#
+disk_types:
+- name: default
+  disk_size: 1024
+
+>>>>>>> Stashed changes
 networks:
+  - name: default
+    type: manual
+    subnets:
+    - azs: [z1, z2, z3]
+      dns: [8.8.8.8]
+      range: 10.244.0.0/24
+      gateway: 10.244.0.1
+      static: [10.244.0.34]
+      reserved: []
   - name: articulate
     type: manual
     subnets:
@@ -7,9 +32,18 @@ networks:
       static: [10.244.9.2 - 10.244.9.10]
 
 compilation:
+<<<<<<< Updated upstream
   workers: 3
   network: articulate
   cloud_properties: {}
+=======
+  az: z1
+  cloud_properties:
+    name: random
+  network: default
+  reuse_compilation_vms: true
+  workers: 6
+>>>>>>> Stashed changes
 
 resource_pools:
   - name: articulate
